@@ -9,6 +9,7 @@ const terminal = require('./terminal');
 run();
 
 function run() {
+  terminal(cluster);
   configure();
   deploy();
 }
