@@ -21,7 +21,7 @@ function configure() {
     exec: workerFile
   });
 
-  cluster.on('exit', restart);
+  cluster.on('exit', handleExit);
 }
 
 function deploy() {
@@ -30,11 +30,13 @@ function deploy() {
   logWorkersCount();
 }
 
-function restart(worker, code, signal) {
-  console.log(
-    'worker %d died (%s), restarting...', worker.process.pid, signal || code
-  );
-  cluster.fork();
+function handleExit(worker, code, signal) {
+  if (!worker.exitedAfterDisconnect) {
+    console.log(
+      'worker %d died (%s), restarting...', worker.process.pid, signal || code
+    );
+    cluster.fork();
+  }
   logWorkersCount();
 }
 
