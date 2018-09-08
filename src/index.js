@@ -10,7 +10,7 @@ function run() {
 
 function configure() {
   cluster.setupMaster({
-    exec: 'src/worker.js'
+    exec: `${__dirname}/http-echo-server.js`
   });
   cluster.on('exit', restart);
 }
