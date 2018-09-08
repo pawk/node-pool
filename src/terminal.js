@@ -9,6 +9,23 @@ const commands = {
     cluster.fork();
     logWorkersCount(cluster);
   },
+  scale: function(line, cluster) {
+    const [ , num ] = line.split(' ');
+    const count = countWorkers(cluster);
+    if (Number.isNaN(parseInt(num))) {
+      console.log('usage: scale [num]\n');
+      return;
+    }
+    if (num > count) {
+      [...Array(num - count)].forEach(cluster.fork)
+    } else if (num < count) {
+      [...Array(count - num)].forEach(() => {
+        const key = Reflect.ownKeys(cluster.workers)[0];
+        cluster.workers[key].kill();
+      })
+    }
+    logWorkersCount(cluster);
+  },
   kill: function(line, cluster) {
     const [ , num ] = line.split(' ');
     if (Number.isNaN(parseInt(num))) {
@@ -57,6 +74,10 @@ module.exports = function terminal(cluster) {
   }
 }
 
-  function logWorkersCount(cluster) {
-    console.log('number of workers: %d\n', Object.keys(cluster.workers).length);
-  }
+function countWorkers(cluster) {
+  return Object.keys(cluster.workers).length;
+}
+
+function logWorkersCount(cluster) {
+  console.log('number of workers: %d\n', countWorkers(cluster));
+}
