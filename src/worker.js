@@ -1,2 +1,3 @@
 const { pid } = process;
-setTimeout(() => console.log('hello from %d', pid), 500)
+
+console.log('hello from %d', pid);

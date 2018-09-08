@@ -1,4 +1,4 @@
-const { isMaster, fork, disconnect, setupMaster } = require('cluster');
+const { fork, setupMaster } = require('cluster');
 const { cpus } = require('os');
 
 setupMaster({
@@ -6,8 +6,4 @@ setupMaster({
 });
 
 console.log('forking for %d cores', cpus().length);
-const children = cpus()
-  .map(fork)
-  //.map(child => child.stdout.pipe(process.stdout));
-
-console.log(children[0])
+const children = cpus().map(fork);
