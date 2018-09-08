@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const cluster = require('cluster');
+const path = require('path');
 const { cpus } = require('os');
 
 run();
@@ -11,9 +12,13 @@ function run() {
 }
 
 function configure() {
+  const workerFile = process.argv[2] || 'src/http-echo-server.js';
+  console.log('worker file path: %s', workerFile)
+
   cluster.setupMaster({
-    exec: `${__dirname}/http-echo-server.js`
+    exec: workerFile
   });
+
   cluster.on('exit', restart);
 }
 
