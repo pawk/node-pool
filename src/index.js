@@ -14,7 +14,7 @@ function run() {
 }
 
 function configure() {
-  const workerFile = process.argv[2] || 'src/http-echo-server.js';
+  const workerFile = process.argv[2] || 'src/worker/http-echo-server.js';
   console.log('worker file path: %s', workerFile)
 
   cluster.setupMaster({
