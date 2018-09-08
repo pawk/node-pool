@@ -20,14 +20,24 @@ module.exports = function terminal(cluster) {
       readline.moveCursor(process.stdout, 0, -1);
       console.log('\nbye!\n');
       process.exit(0);
+    } else if (line === 'ls') {
+      readline.moveCursor(process.stdout, 0, -1);
+      Reflect.ownKeys(cluster.workers)
+        .map(num => console.log(num));
+        console.log('\n');
     } else if (/^kill/.test(line)) {
       readline.moveCursor(process.stdout, 0, -1);
-      const [ , pid ] = line.split(' ');
-      if (Number.isNaN(parseInt(pid))) {
-        console.log('usage: kill [pid]\n');
+      const [ , num ] = line.split(' ');
+      if (Number.isNaN(parseInt(num))) {
+        console.log('usage: kill [num]\n');
         return;
       }
-      console.log('killing %d\n', pid);
+      if (num in cluster.workers) {
+        console.log('killing %d\n', num);
+        cluster.workers[num].kill();
+      } else {
+        console.log('there is no worker %d\n', num);
+      }
     }
   }
 }
