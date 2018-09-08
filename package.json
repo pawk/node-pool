@@ -2,7 +2,10 @@
   "name": "@pawel-gawel/nodead",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
+  "bin": {
+    "nodead": "src/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const cluster = require('cluster');
 const { cpus } = require('os');
 
