@@ -3,6 +3,11 @@ const readline = require('readline');
 const commands = {
   ls: function(line, cluster) {
     console.log('list of running workers: %s\n', Reflect.ownKeys(cluster.workers).join(', '));
+    logWorkersCount(cluster);
+  },
+  fork: function(line, cluster) {
+    cluster.fork();
+    logWorkersCount(cluster);
   },
   kill: function(line, cluster) {
     const [ , num ] = line.split(' ');
@@ -13,6 +18,7 @@ const commands = {
     if (num in cluster.workers) {
       console.log('killing %d\n', num);
       cluster.workers[num].kill();
+      logWorkersCount(cluster);
     } else {
       console.log('there is no worker %d\n', num);
     }
@@ -50,3 +56,7 @@ module.exports = function terminal(cluster) {
     }
   }
 }
+
+  function logWorkersCount(cluster) {
+    console.log('number of workers: %d\n', Object.keys(cluster.workers).length);
+  }

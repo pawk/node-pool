@@ -28,7 +28,6 @@ function configure() {
 function deploy() {
   console.log('forking for %d cores', cpus().length);
   const children = cpus().map(cluster.fork);
-  logWorkersCount();
 }
 
 function handleExit(worker, code, signal) {
@@ -38,9 +37,4 @@ function handleExit(worker, code, signal) {
     );
     cluster.fork();
   }
-  logWorkersCount();
-}
-
-function logWorkersCount() {
-  console.log(' :: there is now %s workers', Object.keys(cluster.workers).length);
 }
