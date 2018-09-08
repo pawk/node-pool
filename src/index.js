@@ -4,6 +4,8 @@ const cluster = require('cluster');
 const path = require('path');
 const { cpus } = require('os');
 
+const terminal = require('./terminal');
+
 run();
 
 function run() {
