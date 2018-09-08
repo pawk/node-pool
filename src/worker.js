@@ -1,10 +1,11 @@
 const { pid } = process;
+const http = require('http');
 
-console.log('hello from %d', pid);
+const port = 8000;
 
-const rand = Math.random();
-
-if (rand < 0.5) {
-  console.log('worker %d will now throw!', pid);
-  throw Error();
-}
+const server = http.createServer((req, res) => {
+  req
+    .on('data', (data) => console.log('%d got request: %s', pid, data))
+    .pipe(res);
+});
+server.listen(port, () => console.log('%d is listening on %d', pid, port))
