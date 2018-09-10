@@ -1,7 +1,8 @@
 const readline = require('readline');
 const cluster = require('cluster');
 
-const { fork } = require('./commands');
+const { fork, scale } = require('./commands');
+const { countWorkers } = require('./utils');
 
 const commands = {
   ls: function(line) {
@@ -14,19 +15,7 @@ const commands = {
   },
   scale: function(line) {
     const [ , num ] = line.split(' ');
-    const count = countWorkers(cluster);
-    if (Number.isNaN(parseInt(num))) {
-      console.log('usage: scale [num]\n');
-      return;
-    }
-    if (num > count) {
-      [...Array(num - count)].forEach(cluster.fork)
-    } else if (num < count) {
-      [...Array(count - num)].forEach(() => {
-        const key = Reflect.ownKeys(cluster.workers)[0];
-        cluster.workers[key].kill();
-      })
-    }
+    scale(num);
     logWorkersCount(cluster);
   },
   kill: function(line) {
@@ -78,10 +67,6 @@ const commands = {
 
 module.exports = terminal;
 
-function countWorkers(cluster) {
-  return Object.keys(cluster.workers).length;
-}
-
 function logWorkersCount(cluster) {
-  console.log('number of workers: %d\n', countWorkers(cluster));
+  console.log('# number of workers: %d\n\n', countWorkers());
 }
