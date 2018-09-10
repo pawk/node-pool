@@ -1,7 +1,7 @@
 const readline = require('readline');
 const cluster = require('cluster');
 
-const { fork } = require('./operations');
+const { fork } = require('./commands');
 
 const commands = {
   ls: function(line) {
