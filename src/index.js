@@ -4,12 +4,12 @@ const cluster = require('cluster');
 const path = require('path');
 const { cpus } = require('os');
 
+const { fork } = require('./operations');
 const terminal = require('./terminal');
 
 run();
 
 function run() {
-  terminal(cluster);
   configure();
   deploy();
 }
@@ -27,7 +27,7 @@ function configure() {
 
 function deploy() {
   console.log('forking for %d cores', cpus().length);
-  const children = cpus().map(cluster.fork);
+  const children = cpus().map(() => fork(cluster));
 }
 
 function handleExit(worker, code, signal) {
@@ -35,6 +35,6 @@ function handleExit(worker, code, signal) {
     console.log(
       'worker %d died (%s), restarting...', worker.process.pid, signal || code
     );
-    cluster.fork();
+    fork();
   }
 }

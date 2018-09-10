@@ -1,15 +1,18 @@
 const readline = require('readline');
+const cluster = require('cluster');
+
+const { fork } = require('./operations');
 
 const commands = {
-  ls: function(line, cluster) {
+  ls: function(line) {
     console.log('list of running workers: %s\n', Reflect.ownKeys(cluster.workers).join(', '));
     logWorkersCount(cluster);
   },
   fork: function(line, cluster) {
-    cluster.fork();
+    fork();
     logWorkersCount(cluster);
   },
-  scale: function(line, cluster) {
+  scale: function(line) {
     const [ , num ] = line.split(' ');
     const count = countWorkers(cluster);
     if (Number.isNaN(parseInt(num))) {
@@ -26,7 +29,7 @@ const commands = {
     }
     logWorkersCount(cluster);
   },
-  kill: function(line, cluster) {
+  kill: function(line) {
     const [ , num ] = line.split(' ');
     if (Number.isNaN(parseInt(num))) {
       console.log('usage: kill [num]\n');
@@ -40,7 +43,7 @@ const commands = {
       console.log('there is no worker %d\n', num);
     }
   },
-  exit: function(line, cluster) {
+  exit: function(line) {
     readline.moveCursor(process.stdout, 0, -1);
     console.log('\nbye!\n');
     process.exit(0);
@@ -48,7 +51,7 @@ const commands = {
 };
 
 
-module.exports = function terminal(cluster) {
+
   const terminal = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -72,7 +75,8 @@ module.exports = function terminal(cluster) {
       console.log('available commands are: %s\n', Reflect.ownKeys(commands).join(', '))
     }
   }
-}
+
+module.exports = terminal;
 
 function countWorkers(cluster) {
   return Object.keys(cluster.workers).length;
