@@ -8,13 +8,15 @@ Features:
 ## Install
 
 ```
-npm -g pawk/nodead
+git clone git@github.com:pawk/node-pool.git
 ```
+
+There are no dependencies for this project.
 
 ## Run
 
 ```
-nodead [worker/file/path]
+node src/index.js [worker/file/path]
 ```
 
 ## Application commands
